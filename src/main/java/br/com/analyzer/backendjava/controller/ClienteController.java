@@ -4,57 +4,50 @@ import br.com.analyzer.backendjava.dto.ClienteRequestDTO;
 import br.com.analyzer.backendjava.dto.ClienteResponseDTO;
 import br.com.analyzer.backendjava.service.ClienteService;
 import jakarta.validation.Valid;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final ClienteService clienteService;
+  private final ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
-    }
+  public ClienteController(ClienteService clienteService) {
+    this.clienteService = clienteService;
+  }
 
-    @GetMapping
-    public String listarTodosClientes(Model model) {
-        List<ClienteResponseDTO> clientes = clienteService.listarTodosClientes();
-        model.addAttribute("clientes", clientes);
-        return "clientes"; // Nome do template Thymeleaf para listar clientes
-    }
+  @PostMapping
+  public ResponseEntity<ClienteResponseDTO> criarCliente(@Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+    ClienteResponseDTO clienteResponseDTO = clienteService.criarCliente(clienteRequestDTO);
+    return new ResponseEntity<>(clienteResponseDTO, HttpStatus.CREATED);
+  }
 
-    @GetMapping("/novo")
-    public String novoCliente(Model model) {
-        model.addAttribute("cliente", new ClienteRequestDTO());
-        return "cliente-form"; // Nome do template Thymeleaf para criar novo cliente
-    }
+  @GetMapping
+  public ResponseEntity<List<ClienteResponseDTO>> listarTodosClientes() {
+    List<ClienteResponseDTO> clientes = clienteService.listarTodosClientes();
+    return ResponseEntity.ok(clientes);
+  }
 
-    @PostMapping
-    public String criarCliente(@Valid @ModelAttribute ClienteRequestDTO clienteRequestDTO) {
-        clienteService.criarCliente(clienteRequestDTO);
-        return "redirect:/clientes"; // Redireciona para a lista de clientes após a criação
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<ClienteResponseDTO> listarClientePorId(@PathVariable Long id) {
+    ClienteResponseDTO clienteResponseDTO = clienteService.listarClientePorId(id);
+    return ResponseEntity.ok(clienteResponseDTO);
+  }
 
-    @GetMapping("/{id}/editar")
-    public String editarCliente(@PathVariable Long id, Model model) {
-        ClienteResponseDTO cliente = clienteService.listarClientePorId(id);
-        model.addAttribute("cliente", cliente);
-        return "cliente-form"; // Nome do template Thymeleaf para editar cliente
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable Long id,
+      @Valid @RequestBody ClienteRequestDTO clienteRequestDTO) {
+    ClienteResponseDTO clienteAtualizado = clienteService.atualizarCliente(id, clienteRequestDTO);
+    return ResponseEntity.ok(clienteAtualizado);
+  }
 
-    @PostMapping("/{id}")
-    public String atualizarCliente(@PathVariable Long id, @Valid @ModelAttribute ClienteRequestDTO clienteRequestDTO) {
-        clienteService.atualizarCliente(id, clienteRequestDTO);
-        return "redirect:/clientes"; // Redireciona para a lista de clientes após a atualização
-    }
-
-    @GetMapping("/{id}/deletar")
-    public String deletarCliente(@PathVariable Long id) {
-        clienteService.deletarCliente(id);
-        return "redirect:/clientes"; // Redireciona para a lista de clientes após a exclusão
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+    clienteService.deletarCliente(id);
+    return ResponseEntity.noContent().build();
+  }
 }
