@@ -7,15 +7,17 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 
-@RestController
+@Controller // Alterado de @RestController para @Controller
 public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "Bem-vindo ao sistema!";
+        // Retorna o nome do template Thymeleaf (home.html)
+        return "home"; 
     }
 }
