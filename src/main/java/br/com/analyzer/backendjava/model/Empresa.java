@@ -1,11 +1,6 @@
 package br.com.analyzer.backendjava.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "TB_EMPRESA")
@@ -27,6 +22,10 @@ public class Empresa {
 
   @Column(name = "ctt_empresa")
   private String contato;
+
+  @ManyToOne
+  @JoinColumn(name = "cliente_id")
+  private Cliente cliente;
 
   public String getNome() {
     return nome;
@@ -60,4 +59,11 @@ public class Empresa {
     this.id = id;
   }
 
+  public Cliente getCliente() {
+    return cliente;
+  }
+
+  public void setCliente(Cliente cliente) {
+    this.cliente = cliente;
+  }
 }
