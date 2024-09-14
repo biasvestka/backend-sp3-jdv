@@ -1,11 +1,7 @@
 package br.com.analyzer.backendjava.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_CLIENTE")
@@ -33,6 +29,9 @@ public class Cliente {
 
   @Column(name = "pswd_cliente")
   private String password;
+
+  @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Empresa> empresas;
 
   public Long getId() {
     return id;
@@ -66,4 +65,11 @@ public class Cliente {
     this.password = password;
   }
 
+  public List<Empresa> getEmpresas() {
+    return empresas;
+  }
+
+  public void setEmpresas(List<Empresa> empresas) {
+    this.empresas = empresas;
+  }
 }
