@@ -36,24 +36,25 @@ public class ClienteController {
   @PostMapping
   public String criarCliente(@Valid @ModelAttribute ClienteRequestDTO clienteRequestDTO) {
     clienteService.criarCliente(clienteRequestDTO);
-    return "redirect:/clientes"; 
+    return "redirect:/clientes"; // Redireciona para a lista de clientes após a criação
+  }
 
   @GetMapping("/{id}/editar")
   public String editarCliente(@PathVariable Long id, Model model) {
     ClienteResponseDTO cliente = clienteService.listarClientePorId(id);
     model.addAttribute("cliente", cliente);
-    return "cliente-form";
+    return "cliente-form"; // Nome do template Thymeleaf para editar cliente
   }
 
   @PostMapping("/{id}")
   public String atualizarCliente(@PathVariable Long id, @Valid @ModelAttribute ClienteRequestDTO clienteRequestDTO) {
     clienteService.atualizarCliente(id, clienteRequestDTO);
-    return "redirect:/clientes"; 
+    return "redirect:/clientes"; // Redireciona para a lista de clientes após a atualização
   }
 
   @GetMapping("/{id}/deletar")
   public String deletarCliente(@PathVariable Long id) {
     clienteService.deletarCliente(id);
-    return "redirect:/clientes"; 
+    return "redirect:/clientes"; // Redireciona para a lista de clientes após a exclusão
   }
 }
